@@ -18,40 +18,54 @@ import android.view.Menu;
 public class MainActivity extends Activity {
 
 	//The abstract class KnockDetector requires the implementation of void knockDetected(int) method
-	KnockDetector mKnockDetector = new KnockDetector(this){
-		@Override
-		void knockDetected(int knockCount) {
-			switch (knockCount){
-			case 2:
-				Log.d("media","next song");
-				playNextSong();
-				break;
-			case 3:
-				Log.d("media","pause/play");
-				pausePlay();
-				break;
-			default:
-				break;
-			}
-		}
-	};
+	KnockDetector mKnockDetector = null;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		if(mKnockDetector == null){
+			mKnockDetector = new KnockDetector(this){
+				@Override
+				void knockDetected(int knockCount) {
+					switch (knockCount){
+						case 1:
+							Log.d("KnockCount", "1 knock");
+							break;
+						case 2:
+							Log.d("KnockCount", "2 knock");
+							//playNextSong();
+							break;
+						case 3:
+							Log.d("KnockCount", "3 knock");
+							//pausePlay();
+							break;
+						default:
+							break;
+					}
+				}
+			};
+		}
 		mKnockDetector.init();
 	}
 
 	public void onBackPressed (){
 		super.onBackPressed();
-		mKnockDetector.pause();
+		Log.d("Activity Life", "on invoked");
 	}
 
 	public void onResume(){
 		super.onResume();
-		mKnockDetector.resume();
+	}
+
+	public void onRestart(){
+		super.onRestart();
+	}
+
+	public void onStop(){
+		Log.d("Activity Life", "onStop invoked");
+		super.onStop();
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,8 +105,8 @@ public class MainActivity extends Activity {
 		//Sends the keyevent to app currently playing media
 
 		/*
-		 * Attempt to execute the following with reflection. 
-		 * 
+		 * Attempt to execute the following with reflection.
+		 *
 		 * [Code]
 		 * IAudioService audioService = IAudioService.Stub.asInterface(b);
 		 * audioService.dispatchMediaKeyEvent(keyEvent);
@@ -113,7 +127,7 @@ public class MainActivity extends Activity {
 			// Dispatch keyEvent using IAudioService.dispatchMediaKeyEvent(KeyEvent)
 			Class.forName("android.media.IAudioService")
 			.getDeclaredMethod("dispatchMediaKeyEvent",KeyEvent.class)
-			.invoke(audioService, keyEvent);            
+			.invoke(audioService, keyEvent);
 
 		}  catch (Exception e1) {
 			e1.printStackTrace();

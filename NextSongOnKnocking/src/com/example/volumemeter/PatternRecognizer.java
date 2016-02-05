@@ -4,13 +4,15 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.lang.Runnable;
+import java.lang.Math;
 
 import android.util.Log;
 
 public class PatternRecognizer {
 	
-	final long minWaitTime_ms = 150; // The time-window when knocks will NOT be acknowledged
-	final long waitWindow_ms = 500; // The time-window when knocks WILL be acknowledged
+	final long minWaitTime_ms = 250; // The time-window when knocks will NOT be acknowledged
+	final long waitWindow_ms = 1000; // The time-window when knocks WILL be acknowledged
+	final int MAX_DETECTED = 3;
 	
 	private ScheduledFuture<?> timerFuture = null ;
 	EventGenState_t state = EventGenState_t.Wait;
@@ -68,10 +70,7 @@ public class PatternRecognizer {
 			//Do nothing, ignore knock
 			break;
 		case S4:
-			timerFuture.cancel(false);
-			p.knockDetected(++detectedKnockCount);
-			detectedKnockCount = 0;
-			state = EventGenState_t.Wait;
+			detectedKnockCount = Math.min(MAX_DETECTED, detectedKnockCount+1);
 			break;
 		default:
 			Log.d("pattern rec","error 1");
@@ -91,6 +90,7 @@ public class PatternRecognizer {
 			state = EventGenState_t.S2;
 			break;
 		case S2:
+			p.knockDetected(detectedKnockCount);
 			detectedKnockCount = 0;
 			state = EventGenState_t.Wait;
 			break;

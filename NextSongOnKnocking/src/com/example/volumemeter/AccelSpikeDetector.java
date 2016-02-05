@@ -16,12 +16,16 @@ public class AccelSpikeDetector implements SensorEventListener{
 	
 	public volatile boolean spikeDetected = false;
 	private SensorManager mSensorManager;
+
+	private PatternRecognizer mPatt;
+
+	private Callback callbackMethod;
 	
 	//Optimization parameters accelerometer
-	final public float thresholdZ = 3; //Force needed to trigger event, G = 9.81 methinks
+	final public float thresholdZ = 5; //Force needed to trigger event, G = 9.81 methinks
 	final public float threshholdX = 5; 
 	final public float threshholdY = 5;
-	final public int updateFrequency = 50;
+	final public int updatePeriod = 100; //in microseconds
 	
 	
 	//For high pass filter
@@ -41,29 +45,39 @@ public class AccelSpikeDetector implements SensorEventListener{
 		mSensorManager = sm;
 	}
 
+	public void registerCallback(Callback cb){
+		callbackMethod = cb;
+	}
+
+	public void unregisterCallback(){
+		callbackMethod = null;
+	}
+
 	public void stopAccSensing(){
 		mSensorManager.unregisterListener(this);
 	}
 
 	public void resumeAccSensing(){
-		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), 1000000/updateFrequency);
+		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), updatePeriod);
 	}
 
 	public void onSensorChanged(SensorEvent event) {
-		prevXVal = currentXVal;
+		//prevXVal = currentXVal;
 		currentXVal = abs(event.values[0]); // X-axis
-		diffX = currentXVal - prevXVal;
+		//diffX = currentXVal - prevXVal;
 		
-		prevYVal = currentYVal;
+//		prevYVal = currentYVal;
 		currentYVal = abs(event.values[1]); // Y-axis
-		diffY = currentYVal - prevYVal;		
+//		diffY = currentYVal - prevYVal;
 		
-		prevZVal = currentZVal;
+//		prevZVal = currentZVal;
 		currentZVal = abs(event.values[2]); // Z-axis
-		diffZ = currentZVal - prevZVal;
+//		diffZ = currentZVal - prevZVal;
 
 		//Z force must be above some limit, the other forces below some limit to filter out shaking motions
-		if (currentZVal > prevZVal && diffZ > thresholdZ && diffX < threshholdX && diffY < threshholdY){
+		if (currentZVal > thresholdZ && currentXVal < threshholdX && currentYVal < threshholdY){
+			String log = "currXVal:" + currentXVal + " currYVal:" + currentYVal + " currZVal:" + currentZVal;
+			Log.d("Accel Event", log);
 			accTapEvent();
 		}
 
@@ -71,7 +85,8 @@ public class AccelSpikeDetector implements SensorEventListener{
 
 	private void accTapEvent(){
 		Log.d("acceltap","single tap event detected!");
-		spikeDetected = true;
+		//generate knock event
+		callbackMethod.knockEvent();
 	}
 
 	private float abs(float f) {
