@@ -47,7 +47,7 @@ ADDED from /Users/brad/code/KnockKnock/NextSongOnKnocking/app/src/main/AndroidMa
 		ADDED from /Users/brad/code/KnockKnock/NextSongOnKnocking/app/src/main/AndroidManifest.xml:17:9-45
 	android:theme
 		ADDED from /Users/brad/code/KnockKnock/NextSongOnKnocking/app/src/main/AndroidManifest.xml:19:9-40
-activity#com.example.volumemeter.MainActivity
+activity#com.capstone.knockknock.MainActivity
 ADDED from /Users/brad/code/KnockKnock/NextSongOnKnocking/app/src/main/AndroidManifest.xml:20:9-28:20
 	android:label
 		ADDED from /Users/brad/code/KnockKnock/NextSongOnKnocking/app/src/main/AndroidManifest.xml:22:13-45

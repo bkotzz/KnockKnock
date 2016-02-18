@@ -1,7 +1,7 @@
 /**
  * Automatically generated file. DO NOT MODIFY
  */
-package com.example.volumemeter;
+package com.capstone.knockknock;
 
 public final class BuildConfig {
   public static final boolean DEBUG = Boolean.parseBoolean("true");

@@ -1,4 +1,4 @@
-package com.example.volumemeter;
+package com.capstone.knockknock;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -18,17 +18,14 @@ public class AccelSpikeDetector implements SensorEventListener{
 	private Callback callbackMethod;
 	
 	// Forces are in m/s^2
-	final public float minForceZ = 5;
-	final public float maxForceX = 5;
-	final public float maxForceY = 5;
-
-	// Hint, in microseconds, of desired delay between events
-	final public int updatePeriod = 100;
+	final public float minAccelZ = 5;
+	final public float minAccelX = 5;
+	final public float minAccelY = 5;
 
 	//For high pass filter
-	private float currentZVal = 0;
-	private float currentXVal = 0;
-	private float currentYVal = 0;
+	private float currentAccelZ = 0;
+	private float currentAccelX = 0;
+	private float currentAccelY = 0;
 
 	AccelSpikeDetector(SensorManager sm){
 		mSensorManager = sm;
@@ -47,24 +44,24 @@ public class AccelSpikeDetector implements SensorEventListener{
 	}
 
 	public void resumeAccSensing(){
-		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), updatePeriod);
+		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), mSensorManager.SENSOR_DELAY_FASTEST);
 	}
 
 	public void onSensorChanged(SensorEvent event) {
-		currentXVal = Math.abs(event.values[0]); // X-axis
-		currentYVal = Math.abs(event.values[1]); // Y-axis
-		currentZVal = Math.abs(event.values[2]); // Z-axis
+		currentAccelX = Math.abs(event.values[0]); // X-axis
+		currentAccelY = Math.abs(event.values[1]); // Y-axis
+		currentAccelZ = Math.abs(event.values[2]); // Z-axis
 
 		// Z force must be above some limit, the other forces below some limit to filter out shaking motions
-		if (currentZVal > minForceZ && currentXVal < maxForceX && currentYVal < maxForceY){
-			String log = "currXVal:" + currentXVal + " currYVal:" + currentYVal + " currZVal:" + currentZVal;
+		if (currentAccelZ > minAccelZ && currentAccelX < minAccelX && currentAccelY < minAccelY){
+			String log = "currXVal:" + currentAccelX + " currYVal:" + currentAccelY + " currZVal:" + currentAccelZ;
 			Log.d("AccelSpikeDetector", "onSensorChanged " + log);
-
-                    callbackMethod.knockEvent();
+			callbackMethod.knockEvent();
 		}
 
 	}
 
+	// Must override to implement SensorEventListener
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 

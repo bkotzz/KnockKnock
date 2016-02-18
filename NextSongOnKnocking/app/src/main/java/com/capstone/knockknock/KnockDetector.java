@@ -1,7 +1,4 @@
-package com.example.volumemeter;
-
-import java.util.Timer;
-import java.util.TimerTask;
+package com.capstone.knockknock;
 
 import android.content.Context;
 import android.hardware.SensorManager;

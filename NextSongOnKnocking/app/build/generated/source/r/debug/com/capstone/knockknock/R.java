@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.example.volumemeter;
+package com.capstone.knockknock;
 
 public final class R {
     public static final class attr {
