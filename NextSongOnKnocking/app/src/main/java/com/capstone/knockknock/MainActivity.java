@@ -5,6 +5,8 @@
 package com.capstone.knockknock;
 
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -45,7 +47,7 @@ public class MainActivity extends Activity {
         });
 
 		if(mKnockDetector == null){
-			mKnockDetector = new KnockDetector(this){
+			mKnockDetector = new KnockDetector((SensorManager) this.getSystemService(Context.SENSOR_SERVICE)){
 				@Override
 				void knockDetected(int knockCount) {
 					switch (knockCount){

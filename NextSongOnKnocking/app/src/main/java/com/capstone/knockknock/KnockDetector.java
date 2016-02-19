@@ -1,6 +1,5 @@
 package com.capstone.knockknock;
 
-import android.content.Context;
 import android.hardware.SensorManager;
 
 interface Callback{
@@ -14,19 +13,19 @@ abstract public class KnockDetector implements Callback {
 	 * Manages starting, pausing and resuming the Spike Detector and Pattern Recognizer
 	 */
 	
-	private MainActivity parentActivity;	
+	private SensorManager mParentSensorManager;
 
 	private AccelSpikeDetector mAccelSpikeDetector;
 	private PatternRecognizer mPatt = new PatternRecognizer(this);
 	
 	abstract void knockDetected(int knockCount);
 
-	KnockDetector(MainActivity parent){
-		parentActivity = parent;
+	KnockDetector(SensorManager parentSensorManager){
+		mParentSensorManager = parentSensorManager;
 	}
 
 	public void init(){
-		mAccelSpikeDetector = new AccelSpikeDetector((SensorManager) parentActivity.getSystemService(Context.SENSOR_SERVICE));
+		mAccelSpikeDetector = new AccelSpikeDetector(mParentSensorManager);
 		mAccelSpikeDetector.resumeAccSensing();
 		mAccelSpikeDetector.registerCallback(this);
 	}

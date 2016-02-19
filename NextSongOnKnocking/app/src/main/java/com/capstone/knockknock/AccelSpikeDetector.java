@@ -5,7 +5,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import java.lang.Math;
 
 /**
  * Detects spikes in accelerometer data (only in z axis) and generates accelerometer events

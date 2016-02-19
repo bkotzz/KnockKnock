@@ -4,7 +4,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.lang.Runnable;
-import java.lang.Math;
 
 import android.util.Log;
 
